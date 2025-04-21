@@ -1,0 +1,271 @@
+Problem,Prompt,gpt-4.1 Output,Codestral-2501 Output
+0.0,Summarize the following Java method. Let's think step-by-step. Here's the code: ,,
+0.0,Summarize the following Java method. Let's think step-by-step. Here's the code: ,,
+1.0,"Prompt 1: Identify the off-by-one bug in this Python function. Here's the code:  
+
+Prompt 2: Now, fix the bug in the following function. ",,
+1.0,"Prompt 1: Identify the off-by-one bug in this Python function. Here's the code:  
+
+Prompt 2: Now, fix the bug in the following function. ",,
+2.0,"Example 1
+Input:
+void copyArray(int* dest, int* src, int size) {
+    for (int i = 0; i <= size; i++) {
+        dest[i] = src[i];
+    }
+}
+
+Bug Type: Off-by-One Error (Buffer Overflow)
+
+
+Example 2 
+Input: 
+int calculateSum(int a, int b) {
+    int sum;
+    return sum;
+}
+Bug Type: Uninitialized Variable
+
+Now, classify the type of bug in the C++ function. Here's the code: ",,
+2.0,"Example 1
+Input:
+void copyArray(int* dest, int* src, int size) {
+    for (int i = 0; i <= size; i++) {
+        dest[i] = src[i];
+    }
+}
+
+Bug Type: Off-by-One Error (Buffer Overflow)
+
+
+Example 2 
+Input: 
+int calculateSum(int a, int b) {
+    int sum;
+    return sum;
+}
+Bug Type: Uninitialized Variable
+
+Now, classify the type of bug in the C++ function. Here's the code: ",,
+3.0,"Example 1
+Input: ""user@example.com""
+Output: valid
+
+Example 2
+Input: ""invalid-email@""
+Output: invalid
+
+Example 3
+Input: ""john.doe@company.org""
+Output: valid
+
+Example 4
+Input: ""noatsign.com""
+Output: invalid
+
+Now complete the Python function using regex to validate basic email addresses. Here's the code: ",,
+3.0,"Example 1
+Input: ""user@example.com""
+Output: valid
+
+Example 2
+Input: ""invalid-email@""
+Output: invalid
+
+Example 3
+Input: ""john.doe@company.org""
+Output: valid
+
+Example 4
+Input: ""noatsign.com""
+Output: invalid
+
+Now complete the Python function using regex to validate basic email addresses. Here's the code: ",,
+4.0,Complete the Flask API Python function with an endpoint that returns a JSON greeting. Here's the code: ,,
+4.0,Complete the Flask API Python function with an endpoint that returns a JSON greeting. Here's the code: ,,
+5.0,"Prompt 1: You will be writing the schema for a review app with users, books, and reviews. Understand the types of data you'll be storing, their relationships, and any constraints. Here's the code:  
+
+Prompt 2: Choose a database model for the data(e.g., relational, object-relational, etc.)
+
+Prompt 3: Create an Entity-Relationship model with the data. 
+
+Prompt 4: Eliminate redundancy and ensure data integrity by applying normalization rules. 
+
+Prompt 5: Define each table, its columns, data types, and constraints
+
+Prompt 6: Establish relationships between tables. 
+
+Prompt 7: Test the schema with sample data, identify and fix any issues, and iterate on the design",,
+5.0,"Prompt 1: You will be writing the schema for a review app with users, books, and reviews. Understand the types of data you'll be storing, their relationships, and any constraints. Here's the code:  
+
+Prompt 2: Choose a database model for the data(e.g., relational, object-relational, etc.)
+
+Prompt 3: Create an Entity-Relationship model with the data. 
+
+Prompt 4: Eliminate redundancy and ensure data integrity by applying normalization rules. 
+
+Prompt 5: Define each table, its columns, data types, and constraints
+
+Prompt 6: Establish relationships between tables. 
+
+Prompt 7: Test the schema with sample data, identify and fix any issues, and iterate on the design",,
+6.0,Identify any null dereference risk in the Java function. Here's the code:,,
+6.0,Identify any null dereference risk in the Java function. Here's the code:,,
+7.0,"Example 1:
+Input: 'John,Doe,""123, Elm Street"",Engineer'
+Output: ['John', 'Doe', '123, Elm Street', 'Engineer']
+
+Example 2:
+Input: '""Jane, A."",Smith,""456 Oak Avenue"",Doctor'
+Output: ['Jane, A.', 'Smith', '456 Oak Avenue', 'Doctor']
+
+Example 3:
+Input: 'Alice,Brown,""789 Pine St, Apt 4B"",""Data Scientist""'
+Output: ['Alice', 'Brown', '789 Pine St, Apt 4B', 'Data Scientist']
+
+Now, improve the Python parser function to handle quoted fields in CSV lines. Quoted fields may contain commas, which should not be split. Here's the code:",,
+7.0,"Example 1:
+Input: 'John,Doe,""123, Elm Street"",Engineer'
+Output: ['John', 'Doe', '123, Elm Street', 'Engineer']
+
+Example 2:
+Input: '""Jane, A."",Smith,""456 Oak Avenue"",Doctor'
+Output: ['Jane, A.', 'Smith', '456 Oak Avenue', 'Doctor']
+
+Example 3:
+Input: 'Alice,Brown,""789 Pine St, Apt 4B"",""Data Scientist""'
+Output: ['Alice', 'Brown', '789 Pine St, Apt 4B', 'Data Scientist']
+
+Now, improve the Python parser function to handle quoted fields in CSV lines. Quoted fields may contain commas, which should not be split. Here's the code:",,
+8.0,"Example 1:
+Input:
+data class Book(val id: Int, val title: String, val author: String)
+
+Output:
+routing {
+    route(""/books"") {
+        get { call.respond(books) }
+        get(""{id}"") { 
+            val id = call.parameters[""id""]?.toIntOrNull()
+            books.find { it.id == id }?.let { call.respond(it) } ?: call.respond(HttpStatusCode.NotFound)
+        }
+        post { books.add(call.receive<Book>()); call.respond(HttpStatusCode.Created) }
+        put(""{id}"") { 
+            val id = call.parameters[""id""]?.toIntOrNull()
+            val index = books.indexOfFirst { it.id == id }
+            if (index != -1) books[index] = call.receive() else call.respond(HttpStatusCode.NotFound)
+        }
+        delete(""{id}"") { 
+            if (books.removeIf { it.id == call.parameters[""id""]?.toIntOrNull() }) call.respond(HttpStatusCode.NoContent) 
+            else call.respond(HttpStatusCode.NotFound)
+        }
+    }
+}
+
+Example 2:
+Input:
+data class User(val id: Int, val name: String, val email: String)
+
+Output:
+routing {
+    route(""/users"") {
+        get { call.respond(users) }
+        get(""{id}"") { 
+            users.find { it.id == call.parameters[""id""]?.toIntOrNull() }?.let { call.respond(it) } 
+                ?: call.respond(HttpStatusCode.NotFound)
+        }
+        post { users.add(call.receive<User>()); call.respond(HttpStatusCode.Created) }
+        put(""{id}"") { 
+            users.indexOfFirst { it.id == call.parameters[""id""]?.toIntOrNull() }.let { index ->
+                if (index != -1) users[index] = call.receive() else call.respond(HttpStatusCode.NotFound)
+            }
+        }
+        delete(""{id}"") { 
+            if (users.removeIf { it.id == call.parameters[""id""]?.toIntOrNull() }) call.respond(HttpStatusCode.NoContent)
+            else call.respond(HttpStatusCode.NotFound)
+        }
+    }
+}
+
+Now, convert the Kotlin data class to a REST API using Ktor with CRUD operations. Here's the code:",,
+8.0,"Example 1:
+Input:
+data class Book(val id: Int, val title: String, val author: String)
+
+Output:
+routing {
+    route(""/books"") {
+        get { call.respond(books) }
+        get(""{id}"") { 
+            val id = call.parameters[""id""]?.toIntOrNull()
+            books.find { it.id == id }?.let { call.respond(it) } ?: call.respond(HttpStatusCode.NotFound)
+        }
+        post { books.add(call.receive<Book>()); call.respond(HttpStatusCode.Created) }
+        put(""{id}"") { 
+            val id = call.parameters[""id""]?.toIntOrNull()
+            val index = books.indexOfFirst { it.id == id }
+            if (index != -1) books[index] = call.receive() else call.respond(HttpStatusCode.NotFound)
+        }
+        delete(""{id}"") { 
+            if (books.removeIf { it.id == call.parameters[""id""]?.toIntOrNull() }) call.respond(HttpStatusCode.NoContent) 
+            else call.respond(HttpStatusCode.NotFound)
+        }
+    }
+}
+
+Example 2:
+Input:
+data class User(val id: Int, val name: String, val email: String)
+
+Output:
+routing {
+    route(""/users"") {
+        get { call.respond(users) }
+        get(""{id}"") { 
+            users.find { it.id == call.parameters[""id""]?.toIntOrNull() }?.let { call.respond(it) } 
+                ?: call.respond(HttpStatusCode.NotFound)
+        }
+        post { users.add(call.receive<User>()); call.respond(HttpStatusCode.Created) }
+        put(""{id}"") { 
+            users.indexOfFirst { it.id == call.parameters[""id""]?.toIntOrNull() }.let { index ->
+                if (index != -1) users[index] = call.receive() else call.respond(HttpStatusCode.NotFound)
+            }
+        }
+        delete(""{id}"") { 
+            if (users.removeIf { it.id == call.parameters[""id""]?.toIntOrNull() }) call.respond(HttpStatusCode.NoContent)
+            else call.respond(HttpStatusCode.NotFound)
+        }
+    }
+}
+
+Now, convert the Kotlin data class to a REST API using Ktor with CRUD operations. Here's the code:",,
+9.0,Write a brief summary of the function. Here's the code:,,
+9.0,Write a brief summary of the function. Here's the code:,,
+10.0,Write a prompt that could generate the code. Let's think step by step. Here's the code:,,
+10.0,Write a prompt that could generate the code. Let's think step by step. Here's the code:,,
+11.0,"Prompt 1: Identify the bug in this Python function. Here's the code:  
+
+Prompt 2: Now fix the bug when the input is 0.",,
+11.0,"Prompt 1: Identify the bug in this Python function. Here's the code:  
+
+Prompt 2: Now fix the bug when the input is 0.",,
+12.0,Implement node deletion by value. Let's think step-by-step. Here's the code:,,
+12.0,Implement node deletion by value. Let's think step-by-step. Here's the code:,,
+13.0,Complete the recursive function for Fibonacci. Let's think step-by-step. Here's the code:,,
+13.0,Complete the recursive function for Fibonacci. Let's think step-by-step. Here's the code:,,
+14.0,"Complete the class constructor to initualize the name, age, and optional email attributes",,
+14.0,"Complete the class constructor to initualize the name, age, and optional email attributes",,
+15.0, ,,
+15.0, ,,
+16.0,,,
+16.0,,,
+17.0,,,
+17.0,,,
+18.0,,,
+18.0,,,
+19.0,Complete the calculate_average function to return the average of scores,,
+19.0,Complete the calculate_average function to return the average of scores,,
+20.0,,,
+20.0,,,
+21.0,,,
+21.0,,,
