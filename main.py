@@ -106,7 +106,7 @@ def main():
     # Start timing the entire script
     script_start_time = time.time()
     
-    model_choices = ["gpt-4.1", "Codestral-2501"]
+    model_choices = ["microsoft/MAI-DS-R1", "Codestral-2501"]
     input_db = pd.read_csv(INPUT_DB)
     
     output_db_cols = [
