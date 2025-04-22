@@ -9,7 +9,7 @@ from azure.core.credentials import AzureKeyCredential
 
 
 # File paths
-INPUT_DATABASE = "data/data.csv"
+INPUT_DATABASE = "data/database_complete_column.csv"
 OUTPUT_DATABASE = "data/output_db.csv"
 
 # Read in token
@@ -174,12 +174,18 @@ def main():
     print("\nCreated output database structure")
     
     for i in range(len(input_db)):
+        # Check if problem has been completed 
+        row = input_db.iloc[i]
+        completed = row['Completed']
+        if completed == 1:
+          continue
+
         # Start timing each problem
         problem_start_time = time.time()
         print(f"\n=== Processing problem {i+1}/{len(input_db)} ===")
         
         print(f"\nReading row {i} from input database...")
-        row = input_db.iloc[i]
+        
 
         print("Extracting problem data...")
         code = row['Code Input']
@@ -225,10 +231,16 @@ def main():
         # Print timing for each problem
         problem_time = time.time() - problem_start_time
         print(f"\nProblem {i+1} completed in {problem_time:.2f} seconds")
+
+        # Update completed column 
+        input_db.iloc[i]['Completed'] = 1 
     
     print("\nWriting output database to file...")
     output_db.to_csv(OUTPUT_DATABASE, index=False)
     print("Output database written successfully")
+
+    # Save updated input database 
+    input_db.to_csv(INPUT_DATABASE, index=False)
     
     # Print total script execution time
     total_time = time.time() - script_start_time
