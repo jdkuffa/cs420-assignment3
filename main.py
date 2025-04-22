@@ -3,11 +3,14 @@ from collections import deque
 import pandas as pd
 import time
 import os
+from azure.ai.inference import ChatCompletionsClient
+from azure.ai.inference.models import SystemMessage, UserMessage
+from azure.core.credentials import AzureKeyCredential
 
 
 # File paths
-INPUT_DB = "data/data.csv"
-OUTPUT_DB = "data/output_db.csv"
+INPUT_DATABASE = "data/data.csv"
+OUTPUT_DATABASE = "data/output_db.csv"
 
 # Read in token
 with open("token", "r") as f:
@@ -15,11 +18,31 @@ with open("token", "r") as f:
 
 # Set GitHub token as an environment variable
 os.environ["GITHUB_TOKEN"] = GITHUB_TOKEN
+token = os.environ["GITHUB_TOKEN"]
+endpoint = "https://models.github.ai/inference"
 
-# OpenAI client
-client = OpenAI(
-    base_url="https://models.inference.ai.azure.com",
-    api_key=os.environ["GITHUB_TOKEN"],
+# Microsoft Azure AI configuration
+azure_model = "microsoft/MAI-DS-R1"
+
+azure_client = ChatCompletionsClient(
+    endpoint=endpoint,
+    credential=AzureKeyCredential(token),
+)
+
+# Mistral AI configuration
+mistral_model = "Codestral-2501"
+
+mistral_client = ChatCompletionsClient(
+    endpoint=endpoint,
+    credential=AzureKeyCredential(token),
+)
+
+# Llama AI configuration
+llama_model = "meta/Llama-4-Maverick-17B-128E-Instruct-FP8"
+
+llama_client = ChatCompletionsClient(
+    endpoint=endpoint,
+    credential=AzureKeyCredential(token),
 )
 
 # Rate limiting variables
@@ -57,7 +80,7 @@ def self_consistency(input, code, model):
 
   # Generate 5 output attempts for each prompt
   outputs = []
-  for attempt in range(5):
+  for attempt in range(2):
     response = send_response(messages, model)
     outputs.append("Output Attempt " + str(attempt) + ": " +
                    response.choices[0].message.content + "\n\n")
@@ -65,14 +88,24 @@ def self_consistency(input, code, model):
   return "".join(outputs)
 
 
-def zero_few_cot(input, code, model):
-  prompt = input + code
-  messages = [{"role": "user", "content": prompt}]
-  response = send_response(messages, model)
-  return response.choices[0].message.content
+def zero_few_cot(input, code, model, client):
+    # Convert input to string if it's a float (NaN or missing value)
+    if isinstance(input, float):
+        input = str(input)
+    if isinstance(code, float):
+        code = str(code)
+    
+    prompt = input + code
+    messages = [{"role": "user", "content": prompt}]
+    try:
+        response = send_response(messages, model, client)
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error making API request: {e}")
+        return "Error"
 
 
-def send_response(messages, model):
+def send_response(messages, model, client):
   # Check if we need to wait for rate limiting
   if len(request_times) > 0:
     time_since_last_request = time.time() - request_times[-1]
@@ -80,77 +113,134 @@ def send_response(messages, model):
       time.sleep(MIN_REQUEST_INTERVAL - time_since_last_request)
   request_times.append(time.time())
 
-  # Send request
-  response = client.chat.completions.create(
-      model=model,
-      messages=messages,
-      max_tokens=1024,
-      temperature=0.7,
-  )
+  # Convert messages to Azure format
+  azure_messages = convert_to_azure_messages(messages)
 
-  print("Response: ", response.choices[0].message.content)
-  return response
+  try:
+      # Send request with proper model format
+      response = client.complete(
+          model=model,
+          messages=azure_messages,
+          max_tokens=2048,
+          temperature=0.7,
+      )
+
+      # print("Response: ", response.choices[0].message.content)
+      return response
+  except Exception as e:
+      print(f"Error making API request: {e}")
+      # Add a longer delay before retrying
+      time.sleep(60)
+      return send_response(messages, model, client)  # Retry the request
 
 
-def select_strategy(strategy, input, code, model):
-  strategy = strategy.lower()
-  if strategy == "zero shot" or strategy == "few shot" or strategy == "chain of thought":
-    return zero_few_cot(input, code, model)
-  elif strategy == "prompt chaining":
-    return prompt_chaining(input, code, model)
-  elif strategy == "self consistency":
-    return self_consistency(input, code, model)
+def select_strategy(strategy, input, code, model, client):
+    # Convert strategy to string and lowercase
+    if isinstance(strategy, float):
+        strategy = str(strategy)
+    strategy = strategy.lower()
+    
+    if strategy == "zero shot" or strategy == "few shot" or strategy == "chain of thought":
+        return zero_few_cot(input, code, model, client)
+    elif strategy == "prompt chaining":
+        return "Not implemented"
+    elif strategy == "self consistency":
+        return "Not implemented"
+
+
+def convert_to_azure_messages(messages):
+  azure_messages = []
+  for msg in messages:
+    if msg["role"] == "user":
+      azure_messages.append(UserMessage(content=msg["content"]))
+    elif msg["role"] == "system":
+      azure_messages.append(SystemMessage(content=msg["content"]))
+  return azure_messages
 
 
 def main():
     # Start timing the entire script
     script_start_time = time.time()
+    print("\n=== Starting script execution ===")
+
+    model_choices = [azure_model, mistral_model, llama_model]
+    clients = [azure_client, mistral_client, llama_client]
+
+    print(f"\nUsing models: {model_choices}")
     
-    model_choices = ["microsoft/MAI-DS-R1", "Codestral-2501"]
-    input_db = pd.read_csv(INPUT_DB)
+    print("\nReading input database...")
+    input_db = pd.read_csv(INPUT_DATABASE)
+    # Fill NaN values with empty strings
+    input_db = input_db.fillna('')
+    print(f"Successfully read {len(input_db)} rows from input database")
     
     output_db_cols = [
-        "Problem", "Prompt", model_choices[0] + " Output",
-        model_choices[1] + " Output"
+        "Problem", "Prompt", model_choices[0] + " Output", model_choices[1] + " Output", model_choices[2] + " Output"
     ]
     output_db = pd.DataFrame(columns=pd.Index(output_db_cols))
+    print("\nCreated output database structure")
     
-    for i in range(3):
+    for i in range(len(input_db)):
         # Start timing each problem
         problem_start_time = time.time()
-        print(f"\nProcessing problem {i+1}/3...")
+        print(f"\n=== Processing problem {i+1}/{len(input_db)} ===")
         
+        print(f"\nReading row {i} from input database...")
         row = input_db.iloc[i]
-        code = row['Code Input']
-        prompt_1_strat = row['Prompt 1 Strategy']
-        prompt_1_input = row['Prompt 1']
-        prompt_2_strat = row['Prompt 2 Strategy']
-        prompt_2_input = row['Prompt 2']
+
+        print("Extracting problem data...")
+        code = str(row['Code Input'])  # Convert to string explicitly
+        prompt_1_strat = str(row['Prompt 1 Strategy'])  # Convert to string explicitly
+        prompt_1_input = str(row['Prompt 1'])  # Convert to string explicitly
+        prompt_2_strat = str(row['Prompt 2 Strategy'])  # Convert to string explicitly
+        prompt_2_input = str(row['Prompt 2'])  # Convert to string explicitly
+        print(f"Problem data extracted: Strategy1={prompt_1_strat}, Strategy2={prompt_2_strat}")
         
-        # Get outputs from both models for each prompt
-        prompt_1_output_m0 = select_strategy(prompt_1_strat, prompt_1_input, code, model_choices[0])
-        prompt_1_output_m1 = select_strategy(prompt_1_strat, prompt_1_input, code, model_choices[1])
+        print("\nProcessing Prompt 1 with first model...")
+        prompt_1_output_m1 = select_strategy(prompt_1_strat, prompt_1_input, code, model_choices[0], clients[0])
+        print("Completed Prompt 1 with first model")
         
-        prompt_2_output_m0 = select_strategy(prompt_2_strat, prompt_2_input, code, model_choices[0])
-        prompt_2_output_m1 = select_strategy(prompt_2_strat, prompt_2_input, code, model_choices[1])
+        print("\nProcessing Prompt 2 with first model...")
+        prompt_2_output_m1 = select_strategy(prompt_2_strat, prompt_2_input, code, model_choices[0], clients[0])
+        print("Completed Prompt 2 with first model")
+
+        print("\nProcessing Prompt 1 with second model...")
+        prompt_1_output_m2 = select_strategy(prompt_1_strat, prompt_1_input, code, model_choices[1], clients[1])
+        print("Completed Prompt 1 with second model")
         
-        # Add outputs to output_db
+        print("\nProcessing Prompt 2 with second model...")
+        prompt_2_output_m2 = select_strategy(prompt_2_strat, prompt_2_input, code, model_choices[1], clients[1])
+        print("Completed Prompt 2 with second model")
+
+        print("\nProcessing Prompt 1 with third model...")
+        prompt_1_output_m3 = select_strategy(prompt_1_strat, prompt_1_input, code, model_choices[2], clients[2])
+        print("Completed Prompt 1 with third model")
+        
+        print("\nProcessing Prompt 2 with third model...")
+        prompt_2_output_m3 = select_strategy(prompt_2_strat, prompt_2_input, code, model_choices[2], clients[2])
+        print("Completed Prompt 2 with third model")
+        
+        print("\nAdding results to output database...")
         output_db.loc[len(output_db)] = [
-            i, prompt_1_input, prompt_1_output_m0, prompt_1_output_m1
+            i, prompt_1_input, prompt_1_output_m1, prompt_1_output_m2, prompt_1_output_m3
         ]
         output_db.loc[len(output_db)] = [
-            i, prompt_2_input, prompt_2_output_m0, prompt_2_output_m1
+            i, prompt_2_input, prompt_2_output_m1, prompt_2_output_m2, prompt_2_output_m3
         ]
+        print("Results added to output database")
         
-        # Print timing for this problem
+        # Print timing for each problem
         problem_time = time.time() - problem_start_time
-        print(f"Problem {i+1} completed in {problem_time:.2f} seconds")
+        print(f"\nProblem {i+1} completed in {problem_time:.2f} seconds")
     
-    output_db.to_csv(OUTPUT_DB, index=False)
+    print("\nWriting output database to file...")
+    output_db.to_csv(OUTPUT_DATABASE, index=False)
+    print("Output database written successfully")
     
     # Print total script execution time
     total_time = time.time() - script_start_time
-    print(f"\nTotal execution time: {total_time:.2f} seconds")
+    print(f"\n=== Script completed ===")
+    print(f"Total execution time: {total_time:.2f} seconds")
     print(f"Average time per problem: {total_time/3:.2f} seconds")
 
 
