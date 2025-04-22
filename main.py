@@ -64,7 +64,7 @@ def prompt_chaining(input, code, model):
 
   # Go through prompts
   for i in range(len(prompts) - 1):
-    response = send_response(messages, model)
+    response = send_response(messages, model, client)
     reply = response.choices[0].message.content
     outputs.append(reply)
     messages.append({"role": "system", "content": reply})
@@ -74,14 +74,13 @@ def prompt_chaining(input, code, model):
   return "".join(outputs)
 
 
-def self_consistency(input, code, model):
+def self_consistency(input, code, model, client):
   prompt = input + code
   messages = {"role": "user", "content": prompt}
 
-  # Generate 5 output attempts for each prompt
   outputs = []
   for attempt in range(2):
-    response = send_response(messages, model)
+    response = send_response(messages, model, client)
     outputs.append("Output Attempt " + str(attempt) + ": " +
                    response.choices[0].message.content + "\n\n")
 
@@ -89,63 +88,59 @@ def self_consistency(input, code, model):
 
 
 def zero_few_cot(input, code, model, client):
-    # Convert input to string if it's a float (NaN or missing value)
-    if isinstance(input, float):
-        input = str(input)
-    if isinstance(code, float):
-        code = str(code)
-    
-    prompt = input + code
-    messages = [{"role": "user", "content": prompt}]
-    try:
-        response = send_response(messages, model, client)
-        return response.choices[0].message.content
-    except Exception as e:
-        print(f"Error making API request: {e}")
-        return "Error"
+  prompt = input + code
+  messages = [{"role": "user", "content": prompt}]
+  try:
+    response = send_response(messages, model, client)
+    return response.choices[0].message.content
+  except Exception as e:
+    print(f"Error making API request: {e}")
+    return "Error"
 
 
 def send_response(messages, model, client):
-  # Check if we need to wait for rate limiting
-  if len(request_times) > 0:
-    time_since_last_request = time.time() - request_times[-1]
-    if time_since_last_request < MIN_REQUEST_INTERVAL:
-      time.sleep(MIN_REQUEST_INTERVAL - time_since_last_request)
-  request_times.append(time.time())
+    # Check if we need to wait for rate limiting
+    if len(request_times) > 0:
+        time_since_last_request = time.time() - request_times[-1]
+        print(f"Time since last request: {time_since_last_request:.2f} seconds")
+        if time_since_last_request < MIN_REQUEST_INTERVAL:
+            wait_time = MIN_REQUEST_INTERVAL - time_since_last_request
+            print(f"Waiting {wait_time:.2f} seconds for rate limiting...")
+            time.sleep(wait_time)
+    request_times.append(time.time())
 
-  # Convert messages to Azure format
-  azure_messages = convert_to_azure_messages(messages)
+    # Convert messages to Azure format
+    azure_messages = convert_to_azure_messages(messages)
+    print(f"Sending request to {model}...")
 
-  try:
-      # Send request with proper model format
-      response = client.complete(
-          model=model,
-          messages=azure_messages,
-          max_tokens=2048,
-          temperature=0.7,
-      )
+    try:
+        # Send request with proper model format
+        response = client.complete(
+            model=model,
+            messages=azure_messages,
+            max_tokens=2048,
+            temperature=0.7,
+        )
 
-      # print("Response: ", response.choices[0].message.content)
-      return response
-  except Exception as e:
-      print(f"Error making API request: {e}")
-      # Add a longer delay before retrying
-      time.sleep(60)
-      return send_response(messages, model, client)  # Retry the request
+        print(f"Received response from {model}")
+        return response
+    except Exception as e:
+        print(f"Error making API request to {model}: {e}")
+        # Add a longer delay before retrying
+        time.sleep(60)
+        return send_response(messages, model, client)  # Retry the request
 
 
 def select_strategy(strategy, input, code, model, client):
-    # Convert strategy to string and lowercase
-    if isinstance(strategy, float):
-        strategy = str(strategy)
-    strategy = strategy.lower()
-    
-    if strategy == "zero shot" or strategy == "few shot" or strategy == "chain of thought":
-        return zero_few_cot(input, code, model, client)
-    elif strategy == "prompt chaining":
-        return "Not implemented"
-    elif strategy == "self consistency":
-        return "Not implemented"
+  strategy = strategy.lower()
+  if strategy == "zero shot" or strategy == "few shot" or strategy == "chain of thought":
+    return zero_few_cot(input, code, model, client)
+  elif strategy == "prompt chaining":
+    return "Not implemented"
+    # return prompt_chaining(input, code, model)
+  elif strategy == "self consistency":
+    return "Not implemented"
+    # return self_consistency(input, code, model)
 
 
 def convert_to_azure_messages(messages):
@@ -170,8 +165,6 @@ def main():
     
     print("\nReading input database...")
     input_db = pd.read_csv(INPUT_DATABASE)
-    # Fill NaN values with empty strings
-    input_db = input_db.fillna('')
     print(f"Successfully read {len(input_db)} rows from input database")
     
     output_db_cols = [
@@ -189,11 +182,11 @@ def main():
         row = input_db.iloc[i]
 
         print("Extracting problem data...")
-        code = str(row['Code Input'])  # Convert to string explicitly
-        prompt_1_strat = str(row['Prompt 1 Strategy'])  # Convert to string explicitly
-        prompt_1_input = str(row['Prompt 1'])  # Convert to string explicitly
-        prompt_2_strat = str(row['Prompt 2 Strategy'])  # Convert to string explicitly
-        prompt_2_input = str(row['Prompt 2'])  # Convert to string explicitly
+        code = row['Code Input']
+        prompt_1_strat = row['Prompt 1 Strategy']
+        prompt_1_input = row['Prompt 1']
+        prompt_2_strat = row['Prompt 2 Strategy']
+        prompt_2_input = row['Prompt 2']
         print(f"Problem data extracted: Strategy1={prompt_1_strat}, Strategy2={prompt_2_strat}")
         
         print("\nProcessing Prompt 1 with first model...")
