@@ -12,7 +12,7 @@ This project is implemented in **Python 3.9+** and is compatible with **macOS, L
 
 1. Clone the repository to your workspace:  
 ```shell
-git clone https://github.com/jdkuffa/cs420-assignment2.git
+git clone https://github.com/jdkuffa/cs420-assignment3.git
 ```
 
 2. Navigate into the repository:
