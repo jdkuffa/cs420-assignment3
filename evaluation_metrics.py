@@ -56,16 +56,15 @@ def evaluate_output(output1, output2, db):
         metric = f"Sentence embedding similarity: {score}"
         print(f"Using sentence embedding metric: {score}")
     
-    # Add to DataFrame
-    print(f"Adding to DataFrame. Current shape: {db.shape}")
+    # Add to DataFrame using loc to append the new row
+    new_idx = len(db)
+    db.loc[new_idx] = [output1, output2, metric]
     
-    new_row = pd.DataFrame([[output1, output2, metric]], columns=['output1', 'output2', 'metric'])
-    db = pd.concat([db, new_row], ignore_index=True)
-    
-    print(f"New DataFrame shape: {db.shape}")
+    print(f"Added new evaluation at index {new_idx}. Current shape: {db.shape}")
     
     return db
 
+    
 def sentence_embedding(output1, output2):
     model = get_model()
     embedding1 = model.encode(output1, convert_to_tensor=True)
