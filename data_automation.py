@@ -22,6 +22,7 @@ def validate_input_data(df):
     if missing_columns:
         raise ValueError(f"Missing required columns: {missing_columns}")
 
+
 def process_prompts(row):
     problem = row['Problem']
     code = row['Code Input']
