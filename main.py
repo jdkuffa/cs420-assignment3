@@ -194,8 +194,7 @@ def main():
         print(f"\n=== Processing problem {i+1}/{len(input_db)-1} ===")
         
         print(f"\nReading row {i} from input database...")
-        
-
+    
         print("Extracting problem data...")
         code = row['Code Input']
         prompt_1_strat = row['Prompt 1 Strategy']
@@ -204,13 +203,13 @@ def main():
         prompt_2_input = row['Prompt 2']
         print(f"Problem data extracted: Strategy1={prompt_1_strat}, Strategy2={prompt_2_strat}")
         
-        print("\nProcessing Prompt 1 with GPT-4...")
+        print("\nProcessing Prompt 1 with Azure...")
         prompt_1_output_m1 = select_strategy(prompt_1_strat, prompt_1_input, code, model_choices[0], clients[0])
-        print("Completed Prompt 1 with GPT-4")
+        print("Completed Prompt 1 with Azure")
         
-        print("\nProcessing Prompt 2 with GPT-4...")
+        print("\nProcessing Prompt 2 with Azure...")
         prompt_2_output_m1 = select_strategy(prompt_2_strat, prompt_2_input, code, model_choices[0], clients[0])
-        print("Completed Prompt 2 with GPT-4")
+        print("Completed Prompt 2 with Azure")
 
         print("\nProcessing Prompt 1 with Mistral Large...")
         prompt_1_output_m2 = select_strategy(prompt_1_strat, prompt_1_input, code, model_choices[1], clients[1])
