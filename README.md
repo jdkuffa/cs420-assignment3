@@ -110,4 +110,4 @@ For the extra credit, we included Llama 4 Maverick 17B 128E Instruct FP8 as a ju
 
 We wrote the ```judge_model.py``` script to output the resulting comparison and analysis from the model to the ```output_db.csv``` under the column "Output Model 3: Meta Llama 4 Maverick." 
 
-The metrics have also been added to the analyses sections of the report.
+The metrics have also been added to the analyses sections of the report under each task's table for each prompt.
