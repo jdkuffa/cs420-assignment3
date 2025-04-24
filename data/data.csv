@@ -1,4 +1,4 @@
-Problem,Code Input,Prompt 1 Strategy,Prompt 1,Prompt 2 Strategy,Prompt 2,Processed
+Problem,Code Input,Prompt 1 Strategy,Prompt 1,Prompt 2 Strategy,Prompt 2
 Code Summarization (Java) Summarize the functionality of the following method:,"public Map<String, Integer> countWordFrequency(List<String> words) { Map<String, Integer> freqMap = new HashMap<>(); for (String word : words) { freqMap.put(word, freqMap.getOrDefault(word, 0) + 1); } return freqMap; }",Chain of thought,Summarize the following Java method. Let's think step-by-step. Here's the code: ,Few shot ,"Example 1:
 Input:
 '''public int sumList(List<Integer> nums) {
@@ -25,10 +25,10 @@ public boolean containsNegative(List<Integer> nums) {
 Output:
 ""This method checks if the input list contains any negative numbers.""
 
-Now, summarize the following Java method. Here's the code: ",False
+Now, summarize the following Java method. Here's the code: "
 Bug Fixing (Python - Off-by-One) Identify and fix the off-by-one error in this function:,"def sum_range(start, end): total=0 for i in range(start, end): total += i return total",Prompt Chaining,"Prompt 1: Identify the off-by-one bug in this Python function. Here's the code:  
 
-Prompt 2: Now, fix the bug in the following function. ",Chain of thought,Fix the off-by-one bug in this Python function. Let's think step-by-step. Here's the code: ,False
+Prompt 2: Now, fix the bug in the following function. ",Chain of thought,Fix the off-by-one bug in this Python function. Let's think step-by-step. Here's the code: 
 Bug Classification (C++) Classify the type of bug in the following C++ function:,int* getArray(int size) { int arr[size]; return arr; },Few shot,"Example 1:
 Input:
 void copyArray(int* dest, int* src, int size) {
@@ -48,7 +48,7 @@ int calculateSum(int a, int b) {
 }
 Bug Type: Uninitialized Variable
 
-Now, classify the type of bug in the C++ function. Here's the code: ",Chain of thought,Classify the type of bug in the C++ function. Let's think step-by-step. Here's the code: ,False
+Now, classify the type of bug in the C++ function. Here's the code: ",Chain of thought,Classify the type of bug in the C++ function. Let's think step-by-step. Here's the code: 
 Generating Email Validators (Python + Regex) Complete the function using regex to validate basic email addresses:,def is_valid_email(email): # TODO: Complete using regex pass,Few shot,"Example 1:
 Input: ""user@example.com""
 Output: valid
@@ -65,8 +65,8 @@ Example 4:
 Input: ""noatsign.com""
 Output: invalid
 
-Now complete the Python function using regex to validate basic email addresses. Here's the code: ",Self-consistency ,Complete the Python function using regex to validate basic email addresses. Here's the code: ,False
-Generating Flask APIs (Python) Create a '/greet/<username>' endpoint that returns a JSON greeting:,"from flask import Flask, jsonify app = Flask(__name__) @app.route('/greet/<username>') def greet(username): # TODO: Return a JSON greeting pass",Zero shot,Complete the Flask API Python function with an endpoint that returns a JSON greeting. Here's the code: ,Chain of thought,Complete the Flask API Python function with an endpoint that returns a JSON greeting. Let's think step-by-step. Here's the code: ,False
+Now complete the Python function using regex to validate basic email addresses. Here's the code: ",Self-consistency ,Complete the Python function using regex to validate basic email addresses. Here's the code: 
+Generating Flask APIs (Python) Create a '/greet/<username>' endpoint that returns a JSON greeting:,"from flask import Flask, jsonify app = Flask(__name__) @app.route('/greet/<username>') def greet(username): # TODO: Return a JSON greeting pass",Zero shot,Complete the Flask API Python function with an endpoint that returns a JSON greeting. Here's the code: ,Chain of thought,Complete the Flask API Python function with an endpoint that returns a JSON greeting. Let's think step-by-step. Here's the code: 
 "SQL Schema Design (SQL) Write the schema for a review app with users, books, and reviews:","-- Tables: users(id, name), books(id, title), reviews(id, user_id, book_id, rating)",Prompt Chaining,"Prompt 1: You will be writing the schema for a review app with users, books, and reviews. Understand the types of data you'll be storing, their relationships, and any constraints. Here's the code:  
 
 Prompt 2: Choose a database model for the data(e.g., relational, object-relational, etc.)
@@ -79,8 +79,8 @@ Prompt 5: Define each table, its columns, data types, and constraints
 
 Prompt 6: Establish relationships between tables. 
 
-Prompt 7: Test the schema with sample data, identify and fix any issues, and iterate on the design",Chain of thought,"Write the schema for a review app with users, books, and reviews. Let's think step by step. Here's the code: ",False
-Null Dereference Detection (Java) Identify any null dereference risk:,public int getLength(String s) { return s.length(); },Zero shot,Identify any null dereference risk in the Java function. Here's the code:,Self-consistency ,Identify any null dereference risk in the Java function. Here's the code:,False
+Prompt 7: Test the schema with sample data, identify and fix any issues, and iterate on the design",Chain of thought,"Write the schema for a review app with users, books, and reviews. Let's think step by step. Here's the code: "
+Null Dereference Detection (Java) Identify any null dereference risk:,public int getLength(String s) { return s.length(); },Zero shot,Identify any null dereference risk in the Java function. Here's the code:,Self-consistency ,Identify any null dereference risk in the Java function. Here's the code:
 CSV Parser Variants (Python) Improve the parser to support quoted fields:,"def parse_csv_line(line): return line.split(',')",Few shot,"Example 1:
 Input: 'John,Doe,""123, Elm Street"",Engineer'
 Output: ['John', 'Doe', '123, Elm Street', 'Engineer']
@@ -93,7 +93,7 @@ Example 3:
 Input: 'Alice,Brown,""789 Pine St, Apt 4B"",""Data Scientist""'
 Output: ['Alice', 'Brown', '789 Pine St, Apt 4B', 'Data Scientist']
 
-Now, improve the Python parser function to handle quoted fields in CSV lines. Quoted fields may contain commas, which should not be split. Here's the code:",Self-consistency ,Improve the parser to support quoted fields. Here's the code:,False
+Now, improve the Python parser function to handle quoted fields in CSV lines. Quoted fields may contain commas, which should not be split. Here's the code:",Self-consistency ,Improve the parser to support quoted fields. Here's the code:
 Data Class to API Conversion (Kotlin) Convert the data class to a REST API using Ktor:,"data class Product(val id: Int, val name: String, val price: Double)",Few shot,"Example 1:
 Input:
 data class Book(val id: Int, val title: String, val author: String)
@@ -152,15 +152,15 @@ Prompt 3: Using the list of endpoints above, generate Ktor route stubs in Kotlin
 
 Prompt 4: For each route stub, implement the handler logic using an in-memory list to store Book objects. Show how to add, retrieve, update, and delete books in this list.
 
-Prompt 5: Combine the data class, in-memory storage, and all route handlers into a complete Ktor application file. Ensure the application is runnable and includes all necessary imports and setup code.",False
-Function Summarization (Python) Write a brief summary of the function:,"def reverse_words(sentence): return ', '.join(sentence.split()[::-1])",Zero shot,Write a brief summary of the function. Here's the code:,Chain of thought,Write a brief summary of the Python function. Let's think step-by-step. Here's the code:,False
-Prompt from Code Comments (Python) Write a prompt that could generate the code:,"# This function checks if a number is prime def is_prime(n): if n <= 1: return False for i in range(2, int(n**0.5)+1): if n % i == 0: return False return True",Self-consistency,Write a prompt that could generate the code. Here's the code:,Chain of thought,Write a prompt that could generate the following code. Let's think step-by-step. Here's the code:,False
+Prompt 5: Combine the data class, in-memory storage, and all route handlers into a complete Ktor application file. Ensure the application is runnable and includes all necessary imports and setup code."
+Function Summarization (Python) Write a brief summary of the function:,"def reverse_words(sentence): return ', '.join(sentence.split()[::-1])",Zero shot,Write a brief summary of the function. Here's the code:,Chain of thought,Write a brief summary of the Python function. Let's think step-by-step. Here's the code:
+Prompt from Code Comments (Python) Write a prompt that could generate the code:,"# This function checks if a number is prime def is_prime(n): if n <= 1: return False for i in range(2, int(n**0.5)+1): if n % i == 0: return False return True",Self-consistency,Write a prompt that could generate the code. Here's the code:,Chain of thought,Write a prompt that could generate the following code. Let's think step-by-step. Here's the code:
 Fixing Factorial Bug (Python) Fix the bug when input is 0:,"def factorial(n): result = 1 for i in range(1, n): result *= i return result",Prompt Chaining,"Prompt 1: Identify the bug in this Python function. Here's the code:  
 
-Prompt 2: Now fix the bug when the input is 0.",Self-consistency ,Fix the bug when input is 0. Here's the code:,False
-Linked List Node Deletion (C) Implement node deletion by value:,"struct Node { int data; struct Node* next; }; void deleteNode(struct Node** head, int key) { // TODO: Implement node deletion }",Chain of thought,Implement node deletion by value. Let's think step-by-step. Here's the code:,Self-consistency ,Implement node deletion by value. Here's the code:,False
+Prompt 2: Now fix the bug when the input is 0.",Self-consistency ,Fix the bug when input is 0. Here's the code:
+Linked List Node Deletion (C) Implement node deletion by value:,"struct Node { int data; struct Node* next; }; void deleteNode(struct Node** head, int key) { // TODO: Implement node deletion }",Chain of thought,Implement node deletion by value. Let's think step-by-step. Here's the code:,Self-consistency ,Implement node deletion by value. Here's the code:
 Recursive Function Completion (Python) Complete the recursive function for Fibonacci:,def fibonacci(n): # TODO: Base cases and recursive call pass,Chain of thought,Complete the recursive function for Fibonacci. Let's think step-by-step. Here's the code:,Self-consistency ,"Complete the recursive function for Fibonacci. Here's the code:
-",False
+"
 Constructor Completion (Python) Complete the class constructor:,"class Person: def __init__(self): # TODO: Add name, age, and optional email pass",Zero shot,"Complete the class constructor to initialize the name, age, and optional email attributes. Here's the code:",Few shot ,"Example 1:
 Input: 
 class Dog: def __init__(self): # TODO: Add breed and age pass
@@ -181,12 +181,12 @@ class Car:
         self.make = make
         self.year = year
 
-Now, complete the class constructor to initialize the name, age, and optional email attributes. Here's the code:",False
-Binary Search Completion (Java) Complete the binary search implementation:,"public int binarySearch(int[] arr, int target) { int left = 0, right = arr.length - 1; while (left <= right) { int mid = (left + right) / 2; // TODO: Compare and adjust bounds } return -1; }",Chain of thought,Complete the binary search implementation. Let's think step-by-step. Here's the code: ,Zero shot ,Complete the binary search implementation. Here's the code: ,False
-Self-Consistency Bug Fixing (C++) Resolve inconsistency between function name and logic:,// Supposed to return true if x is even bool isOdd(int x) { return x % 2 == 0; },Self-consistency,Resolve inconsistency between function name and logic. Here's the code:,Chain of thought,Resolve the inconsistency bewteen function name and logic. Let's think step by step. Here's the code: ,False
+Now, complete the class constructor to initialize the name, age, and optional email attributes. Here's the code:"
+Binary Search Completion (Java) Complete the binary search implementation:,"public int binarySearch(int[] arr, int target) { int left = 0, right = arr.length - 1; while (left <= right) { int mid = (left + right) / 2; // TODO: Compare and adjust bounds } return -1; }",Chain of thought,Complete the binary search implementation. Let's think step-by-step. Here's the code: ,Zero shot ,Complete the binary search implementation. Here's the code: 
+Self-Consistency Bug Fixing (C++) Resolve inconsistency between function name and logic:,// Supposed to return true if x is even bool isOdd(int x) { return x % 2 == 0; },Self-consistency,Resolve inconsistency between function name and logic. Here's the code:,Chain of thought,Resolve the inconsistency bewteen function name and logic. Let's think step by step. Here's the code: 
 Prompt Chaining: Bug Identification -> Fix (JavaScript) Identify and fix the bug:,function isEven(n) { return n % 2; },Prompt chaining,"Step 1: Identify the bug. Here's the code: 
 
-Step 2: Fix it to return n % 2 === 0.",Chain of thought,Identify and fix the bug in the function. Let's think step by step. Here's the code: ,False
+Step 2: Fix it to return n % 2 === 0.",Chain of thought,Identify and fix the bug in the function. Let's think step by step. Here's the code: 
 Summary Decomposition (C++) Decompose the high-level comment/summary into logical steps:,"// Function that validates an input, calculates square, and returns result int process(int x) { if (x < 0) return -1; return x * x; }",Chain of thought,Decompose the high-level comment and summary into logical steps. Let's think step by step. Here's the code: ,Few shot ,"Example 1:
 Input: 
 Function that adds two numbers and returns the result
@@ -210,8 +210,8 @@ Output:
 2. Check if it is divisible by 2.
 3. Return true if divisible, false otherwise.
 
-Decompose the high-level comment and summary into logical steps. Here's the code: ",False
-Purpose Inference -> Completion (Python) Complete the function based on intent:,def calculate_average(scores): total = 0 # TODO: Complete to return average pass,Zero shot,Complete the function to return the average of scores. Here's the code:,Chain of thought,Complete the function to return the average of scores. Let's think step by step. Here's the code:,False
+Decompose the high-level comment and summary into logical steps. Here's the code: "
+Purpose Inference -> Completion (Python) Complete the function based on intent:,def calculate_average(scores): total = 0 # TODO: Complete to return average pass,Zero shot,Complete the function to return the average of scores. Here's the code:,Chain of thought,Complete the function to return the average of scores. Let's think step by step. Here's the code:
 Full-File Bug Detection and Refactoring (Python) Analyze and refactor this utility script for better readability and correctness:,"# utils.py - Script to parse and summarize numeric CSV files import csv def read_csv(filepath): with open(filepath, 'r') as f: return [row for row in csv.reader(f)] def summarize_column(data, index): values = [float(row[index]) for row in data[1:]] total = sum(values) avg = total / len(values) return total, avg def main(): filepath = 'data.csv' data = read_csv(filepath) total, avg = summarize_column(data, 1) print('Total:', total) print('Average:', avg) if __name__ == '__main__': main()",Prompt chaining,"Step 1: Identify the issues in this python function. Here's the code
-Step 2: Refactor the code for better readability and correctness",Self-consistency ,Analyze and refactor this utility script for better readability and correctness. Here's the code: ,False
-Code Completion and Robustness Enhancement (Python) Complete this file-processing script to clean lines and count word frequencies correctly:,"# file_processor.py - Incomplete script for processing text files import string def load_file(filepath): with open(filepath, 'r') as f: return f.readlines() def clean_line(line): # TODO: Remove punctuation and make lowercase pass def count_words(lines): word_counts = {} for line in lines: clean = clean_line(line) for word in clean.split(): word_counts[word] = word_counts.get(word, 0) + 1 return word_counts def main(): filepath = 'input.txt' lines = load_file(filepath) counts = count_words(lines) for word, count in sorted(counts.items()): print(f'{word}: {count}') if __name__ == '__main__': main()",Chain of thought,Complete this file-processing script to clean lines and count word frequencies correctly. Let's think step by step. Here's the code:,Self-consistency ,Complete this file-processing script to clean lines and count word frequencies correctly. Here's the code:,False
+Step 2: Refactor the code for better readability and correctness",Self-consistency ,Analyze and refactor this utility script for better readability and correctness. Here's the code: 
+Code Completion and Robustness Enhancement (Python) Complete this file-processing script to clean lines and count word frequencies correctly:,"# file_processor.py - Incomplete script for processing text files import string def load_file(filepath): with open(filepath, 'r') as f: return f.readlines() def clean_line(line): # TODO: Remove punctuation and make lowercase pass def count_words(lines): word_counts = {} for line in lines: clean = clean_line(line) for word in clean.split(): word_counts[word] = word_counts.get(word, 0) + 1 return word_counts def main(): filepath = 'input.txt' lines = load_file(filepath) counts = count_words(lines) for word, count in sorted(counts.items()): print(f'{word}: {count}') if __name__ == '__main__': main()",Chain of thought,Complete this file-processing script to clean lines and count word frequencies correctly. Let's think step by step. Here's the code:,Self-consistency ,Complete this file-processing script to clean lines and count word frequencies correctly. Here's the code:
