@@ -2,7 +2,7 @@
 
 # **1. Introduction** 
 
-An analysis of different prompting stragies using two models: GPT and Mistral. Additionally, a judge model (Llama) is used to analyze the model outputs. 
+An analysis of various prompting strategies using two large language models: GPT-4 and Mistral Large. To evaluate the quality of the outputs, a third model (Llama 4 Maverick) is used as a judge, providing comparative assessments and insights into model behavior and performance.
 
 # **2. Getting Started**  
 
@@ -67,14 +67,30 @@ pip install -r requirements.txt
 
 ## **2.3 Run Program**
 
-1. Run ```main.py```
+1. Run ```data_automation.py```
 
-TBD.
+To process the incoming ```data.csv``` file containing prompts and problems.
+
+```python3 data_automation.py```
+
+2. Run ```judge_model.py```
+
+To add a column to the output database containing the judge model's analyses.
+
+```python3 judge_model.py```
+
+3. Run ```evaluation_metrics.py```
+   
+To add a column to the output database containing the exact match, BLEU, or embedding-based similarity scores.
 
 ```
-python main.py
+python3 evaluation_metrics.py
 ```
 
 # 3. Report
 
-The assignment report is available in the root directory, labelled as: "analysis-report.pdf"
+The assignment report is available in the root directory, labelled as "analysis-report.pdf".
+
+# 4. Extra Credit
+
+For the extra credit, we included Llama 4 Maverick 17B 128E Instruct FP8 as a judge model. We wrote the ```judge_model.py``` script to output the resulting comparison and analysis from the model to the ```output_db.csv``` under the column "Output Model 3: Meta Llama 4 Maverick."
