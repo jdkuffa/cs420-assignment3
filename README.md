@@ -2,7 +2,7 @@
 
 # **1. Introduction** 
 
-TBD.
+An analysis of different prompting stragies using two models: GPT and Mistral. Additionally, a judge model (Llama) is used to analyze the model outputs. 
 
 # **2. Getting Started**  
 
@@ -77,4 +77,4 @@ python main.py
 
 # 3. Report
 
-The assignment report is available in the root directory, labelled as: "Assignment_Report.pdf."
+The assignment report is available in the root directory, labelled as: "analysis-report.pdf"
