@@ -17,7 +17,7 @@ git clone https://github.com/jdkuffa/cs420-assignment3.git
 
 2. Navigate into the repository:
 
-```
+```shell
 cd cs420-assignment3
 ```
 
@@ -25,27 +25,27 @@ cd cs420-assignment3
 
 ### For macOS/Linux:
 
-```
+```shell
 python -m venv ./venv/
 ```
-```
+```shell
 source venv/bin/activate
 ```
 
 ### For Windows:
 
 1. Install ```virtualenv```:
-```
+```shell
 pip install virtualenv
 ```
 
 2. Create a virtual environment:
-```
+```shell
 python -m virtualenv venv
 ```
 
 3. Activate the environment
-```
+```shell
 venv\Scripts\activate
 ```
 
@@ -53,7 +53,7 @@ The name of your virtual environment should now appear within parentheses just b
 
 To deactivate the virtual environment, use the command:
 
-```
+```shell
 deactivate
 ```
 
@@ -61,7 +61,7 @@ deactivate
 
 Install the required dependencies:
 
-```
+```shell
 pip install -r requirements.txt
 ```
 
@@ -71,7 +71,7 @@ pip install -r requirements.txt
 
 To process the incoming ```data.csv``` file containing prompts and problems.
 
-```
+```python
 python3 data_automation.py
 ```
 
@@ -79,7 +79,7 @@ python3 data_automation.py
 
 To add a column to the output database containing the judge model's analyses.
 
-```
+```python
 python3 judge_model.py
 ```
 
@@ -87,7 +87,7 @@ python3 judge_model.py
    
 To add a column to the output database containing the exact match, BLEU, or embedding-based similarity scores.
 
-```
+```python
 python3 evaluation_metrics.py
 ```
 
