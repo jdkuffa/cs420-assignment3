@@ -71,13 +71,17 @@ pip install -r requirements.txt
 
 To process the incoming ```data.csv``` file containing prompts and problems.
 
-```python3 data_automation.py```
+```
+python3 data_automation.py
+```
 
 2. Run ```judge_model.py```
 
 To add a column to the output database containing the judge model's analyses.
 
-```python3 judge_model.py```
+```
+python3 judge_model.py
+```
 
 3. Run ```evaluation_metrics.py```
    
