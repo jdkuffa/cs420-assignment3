@@ -66,6 +66,15 @@ pip install -r requirements.txt
 ```
 
 ## **2.3 Run Program**
+0. Add GitHub token
+
+Create a file named ```token.txt``` and go to [this link](https://github.com/settings/personal-access-tokens) to make a fine-grained PAT to add to this file.
+
+You can do this manually or from the command line as shown below (feel free to replace ```nano``` with your preferred editor):
+
+```shell
+touch token.txt && nano token.txt
+```
 
 1. Run ```data_automation.py```
 
