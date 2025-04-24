@@ -106,4 +106,8 @@ The assignment report is available in the root directory, labelled as "analysis-
 
 # 4. Extra Credit
 
-For the extra credit, we included Llama 4 Maverick 17B 128E Instruct FP8 as a judge model. We wrote the ```judge_model.py``` script to output the resulting comparison and analysis from the model to the ```output_db.csv``` under the column "Output Model 3: Meta Llama 4 Maverick."
+For the extra credit, we included Llama 4 Maverick 17B 128E Instruct FP8 as a judge model. 
+
+We wrote the ```judge_model.py``` script to output the resulting comparison and analysis from the model to the ```output_db.csv``` under the column "Output Model 3: Meta Llama 4 Maverick." 
+
+The metrics have also been added to the analyses sections of the report.
