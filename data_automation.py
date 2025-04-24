@@ -3,7 +3,7 @@ import os
 
 # File paths
 INPUT_FILE = 'data/data.csv'
-OUTPUT_FILE = 'data/output.csv'
+OUTPUT_FILE = 'data/output_db.csv'
 
 # Column names
 OUTPUT_COLUMNS = [

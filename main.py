@@ -90,7 +90,13 @@ def zero_few_cot(input, code, model, client):
     return "Error"
 
 
-def send_response(messages, model, client):
+def send_response(messages, model, client, retry_count=0):
+    MAX_RETRIES = 3  # Add a maximum retry limit
+    
+    # Check if we've exceeded max retries
+    if retry_count >= MAX_RETRIES:
+        raise Exception(f"Failed to get response after {MAX_RETRIES} attempts")
+
     # Check if we need to wait for rate limiting
     if len(request_times) > 0:
         time_since_last_request = time.time() - request_times[-1]
@@ -104,7 +110,6 @@ def send_response(messages, model, client):
     # Convert messages based on model type
     if model == "microsoft/MAI-DS-R1":
         formatted_messages = convert_to_azure_messages(messages)
-        # Azure request
         try:
             response = client.complete(
                 model=model,
@@ -113,24 +118,23 @@ def send_response(messages, model, client):
                 temperature=0.7
             )
         except Exception as e:
-            print(f"Error making API request to {model}: {e}")
-            time.sleep(60)
-            return send_response(messages, model, client)
+            print(f"Attempt {retry_count + 1} failed for {model}: {str(e)}")
+            time.sleep(min(60 * (retry_count + 1), 300))  # Progressive backoff, max 5 minutes
+            return send_response(messages, model, client, retry_count + 1)
     else:  # Codestral-2501
-        formatted_messages = messages  # Use original format
-        # Codestral request with publisher
+        formatted_messages = messages
         try:
             response = client.complete(
                 model=model,
                 messages=formatted_messages,
                 max_tokens=2048,
                 temperature=0.7,
-                publisher="codestral"  # Add publisher for Codestral requests
+                publisher="codestral"
             )
         except Exception as e:
-            print(f"Error making API request to {model}: {e}")
-            time.sleep(60)
-            return send_response(messages, model, client)
+            print(f"Attempt {retry_count + 1} failed for {model}: {str(e)}")
+            time.sleep(min(60 * (retry_count + 1), 300))  # Progressive backoff, max 5 minutes
+            return send_response(messages, model, client, retry_count + 1)
 
     print(f"Received response from {model}")
     return response
